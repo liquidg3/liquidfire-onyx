@@ -1,0 +1,5 @@
+{
+    "name":         "liquidfire:Onyx",
+    "version":      "0.0.1",
+    "description":  "I simple module that takes visionmedia/consolidate and wraps it with a promise architecture."
+}
