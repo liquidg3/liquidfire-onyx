@@ -1,5 +1,11 @@
 {
     "name":         "liquidfire:Onyx",
     "version":      "0.0.1",
-    "description":  "I simple module that takes visionmedia/consolidate and wraps it with a promise architecture."
+    "description":  "A simple module that provides view rendering strategies (such as visionmedia/consolidate). It's entirely promise based!",
+    "dependencies": {
+        "consolidate": ">=0.10.x"
+    },
+    "events": {
+        "register-server-strategies": "Return an array of liquidfire:Onyx/strategies/_Base subclass."
+    }
 }
