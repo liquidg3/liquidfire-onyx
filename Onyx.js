@@ -9,17 +9,19 @@
  *
  */
 
-define(['altair/facades/declare', //take a look at terms.md
+define(['altair/facades/declare',
         'lodash',
-        'altair/facades/all',
-        'altair/facades/hitch',
         './extensions/Render',
+        './extensions/Widget',
+        './extensions/WidgetRender',
+        './extensions/WidgetSchema',
         './mixins/_HasRenderStrategiesMixin'
 ], function (declare,
              _,
-             all,
-             hitch,
              RenderExtension,
+             WidgetExtension,
+             WidgetRenderExtension,
+             WidgetSchemaExtension,
              _HasRenderStrategiesMixin) {
 
 
@@ -28,7 +30,7 @@ define(['altair/facades/declare', //take a look at terms.md
         _strategies: null,
 
         /**
-         * Startup render extension
+         * Startup ui extensions
          *
          * @param options
          * @returns {altair.Deferred}
@@ -36,8 +38,11 @@ define(['altair/facades/declare', //take a look at terms.md
         startup: function (options) {
 
             var _options            = options || this.options || { installExtension: true },
-                extensionCartridge  = this.nexus('cartridges/Extension'),
-                extensions          = [];
+                cartridge           = _options.extensionCartridge || this.nexus('cartridges/Extension'),
+                render              = _options.renderExtension || new RenderExtension(cartridge),
+                widget              = _options.widgetExtension || new WidgetExtension(cartridge),
+                widgetRender        = _options.widgetRenderExtension || new WidgetRenderExtension(cartridge),
+                widgetSchema        = _options.widgetSchemaExtension || new WidgetSchemaExtension(cartridge);
 
             //did someone pass strategies?
             if(_options.strategies) {
@@ -47,14 +52,8 @@ define(['altair/facades/declare', //take a look at terms.md
             //should we install the extension?
             if(_options.installExtension !== false) {
 
-                //instantiate extension
-                extensions.push(new RenderExtension(extensionCartridge));
-
-                //forge the render extension (make sure it is not started up)
-                this.deferred = extensionCartridge.addExtensions(extensions).then(this.hitch(function (render) {
-                    //startup always returns this
+                this.deferred = cartridge.addExtensions([render, widget, widgetRender, widgetSchema]).then(this.hitch(function () {
                     return this;
-
                 }));
 
             }
