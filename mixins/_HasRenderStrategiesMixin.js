@@ -15,7 +15,7 @@ define(['altair/facades/declare',
         startup: function () {
 
             //listen for render strategy event
-            this.on('register-render-strategies').then(this.hitch('registerRenderStrategies'));
+            this.on('liquidfire:Onyx::register-render-strategies').then(this.hitch('registerRenderStrategies'));
 
             return this.inherited(arguments);
         },

@@ -15,14 +15,18 @@ define(['altair/facades/declare',
         './extensions/Widget',
         './extensions/WidgetRender',
         './extensions/WidgetSchema',
-        './mixins/_HasRenderStrategiesMixin'
+        './nexusresolvers/Widgets',
+        './mixins/_HasRenderStrategiesMixin',
+        'altair/plugins/node!fs'
 ], function (declare,
              _,
              RenderExtension,
              WidgetExtension,
              WidgetRenderExtension,
              WidgetSchemaExtension,
-             _HasRenderStrategiesMixin) {
+             WidgetsResolver,
+             _HasRenderStrategiesMixin,
+             fs) {
 
 
     return declare([_HasRenderStrategiesMixin], {
@@ -42,12 +46,16 @@ define(['altair/facades/declare',
                 render              = _options.renderExtension || new RenderExtension(cartridge),
                 widget              = _options.widgetExtension || new WidgetExtension(cartridge),
                 widgetRender        = _options.widgetRenderExtension || new WidgetRenderExtension(cartridge),
-                widgetSchema        = _options.widgetSchemaExtension || new WidgetSchemaExtension(cartridge);
+                widgetSchema        = _options.widgetSchemaExtension || new WidgetSchemaExtension(cartridge),
+                resolver            = _options.widgetsResolver || new WidgetsResolver(this._nexus);
 
             //did someone pass strategies?
             if(_options.strategies) {
                 this._strategies = _options.strategies;
             }
+
+            //create widgets resolver
+            this._nexus.addResolver(resolver);
 
             //should we install the extension?
             if(_options.installExtension !== false) {
@@ -132,6 +140,49 @@ define(['altair/facades/declare',
 
                 return strategies;
             }));
+
+        },
+
+        /**
+         * Candidates are last in, first out
+         *
+         * @param candidates
+         * @returns {Deferred}
+         */
+        resolveCandidates: function (candidates) {
+
+            var d           = new this.Deferred(),
+                _candidates = _.cloneDeep(candidates),
+                checkNext   = this.hitch(function (template) {
+
+                    if(!template) {
+                        d.reject(new Error('Could not find templates from candidates: ', candidates.join(', ')));
+                        return;
+                    }
+
+                    template = this.resolvePath(template);
+
+                    if(template.search(/\./) === -1) {
+                        template = template + '.ejs';
+                    }
+
+                    this.promise(fs, 'stat', template).then(function (stat) {
+
+                        d.resolve(template);
+
+                    }).otherwise(function () {
+
+                        checkNext(_candidates.pop());
+
+                    });
+
+
+                });
+
+            checkNext(_candidates.pop());
+
+
+            return d;
 
         }
 

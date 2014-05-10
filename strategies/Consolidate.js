@@ -1,13 +1,29 @@
 define(['altair/facades/declare',
         './_Base',
         'lodash',
-        'altair/plugins/node!consolidate'
+        'altair/Lifecycle',
+        'altair/plugins/node!consolidate',
+        'altair/plugins/node!ejs'
 ], function (declare,
              _Base,
              _,
-             consolidate) {
+             Lifecycle,
+             consolidate,
+             ejs) {
 
-    return declare([_Base], {
+    return declare([_Base, Lifecycle], {
+
+        startup: function () {
+
+            //must be added to consolidate (have a fork, just need to build, test, and make a pull request)
+            ejs.filters.split = function (word, delimeter) {
+                "use strict";
+                return word.split(delimeter);
+            };
+
+            return this.inherited(arguments);
+
+        },
 
         canRender: function (ext) {
             return _.has(consolidate, ext);
@@ -15,23 +31,23 @@ define(['altair/facades/declare',
 
         render: function (path, context, options) {
 
-            var d = new this.Deferred(),
+            var dfd = new this.Deferred(),
                 ext = path.split('.').pop();
 
             if(!consolidate[ext]) {
-                d.reject(new Error('Could not find valid renderer for extension ' + ext + ' in consolidate. Make sure to run npm install {{render-library}}'));
-                return d;
+                dfd.reject(new Error('Could not find valid renderer for extension ' + ext + ' in consolidate. Make sure to run npm install {{render-library}}'));
+                return dfd;
             }
 
             consolidate[ext](path, context, function (err, results) {
                 if(err) {
-                    d.reject(err);
+                    dfd.reject(err);
                 } else {
-                    d.resolve(results);
+                    dfd.resolve(results);
                 }
             });
 
-            return d;
+            return dfd;
 
         }
     });
