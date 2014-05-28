@@ -19,22 +19,28 @@ define(['altair/facades/declare',
 
                 Module.extendOnce({
                     widgetPath: './widgets',
-                    widget: function (name, options, config) {
+                    widget: function (named, options, config) {
 
-                        var _name = name,
+                        var _name = named,
                             dfd,
                             path,
                             parts,
                             instanceId,
                             _config;
 
-                        if(name.search(/\./) === -1) {
+
+                        //if it's a nexus name, pass it off
+                        if(named.search(':') > 0) {
+                            return this.nexus(named, options, config);
+                        }
+
+                        if(named.search(/\./) === -1) {
                             dfd = new this.Deferred();
                             dfd.reject('You need to give your widget an instance id: this.widget(\'Name.instanceId\') -> this.widget(\'liquidfire:Forms/widgets/Form.create-user\')');
                         } else {
 
                             //break out instance id
-                            parts = name.split('.');
+                            parts = named.split('.');
                             _name = parts[0];
                             instanceId = parts[1];
 
