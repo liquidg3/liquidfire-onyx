@@ -17,7 +17,8 @@ define(['altair/facades/declare',
         './extensions/WidgetSchema',
         './nexusresolvers/Widgets',
         './mixins/_HasRenderStrategiesMixin',
-        'altair/plugins/node!fs'
+        'altair/plugins/node!fs',
+        'altair/plugins/node!path'
 ], function (declare,
              _,
              RenderExtension,
@@ -26,7 +27,8 @@ define(['altair/facades/declare',
              WidgetSchemaExtension,
              WidgetsResolver,
              _HasRenderStrategiesMixin,
-             fs) {
+             fs,
+             path) {
 
 
     return declare([_HasRenderStrategiesMixin], {
@@ -162,7 +164,7 @@ define(['altair/facades/declare',
 
                     template = this.resolvePath(template);
 
-                    if(template.search(/\./) === -1) {
+                    if(!path.extname(template)) {
                         template = template + '.ejs';
                     }
 
