@@ -26,12 +26,17 @@ define(['altair/facades/declare',
                             path,
                             parts,
                             instanceId,
-                            _config;
+                            _options = options || {},
+                            _config = config || {};
 
+                        //default place to look for templates
+                        if(!_options.viewPaths) {
+                            _options.viewPaths = [this.resolvePath(this.viewPath || 'views')];
+                        }
 
                         //if it's a nexus name, pass it off
                         if(named.search(':') > 0) {
-                            return this.nexus(named, options, config);
+                            return this.nexus(named, _options, _config);
                         }
 
                         if(named.search(/\./) === -1) {
@@ -46,14 +51,13 @@ define(['altair/facades/declare',
 
                             path =  this.resolvePath(pathUtil.join(this.widgetPath, _name.toLowerCase(), _name));
 
-
                             _config = mixin({
                                 type: 'widget',
                                 name: this.name.split('/')[0] + '/widgets/' + _name
-                            }, config || {});
+                            }, _config);
 
 
-                            dfd = this.forge(path, options, _config).then(function (widget) {
+                            dfd = this.forge(path, _options, _config).then(function (widget) {
                                 widget.instanceId = instanceId;
                                 return widget;
                             });

@@ -1,12 +1,8 @@
 define(['altair/facades/declare',
-        'altair/cartridges/extension/extensions/_Base',
-        'altair/Deferred',
-        'altair/facades/hitch'],
+        'altair/cartridges/extension/extensions/_Base'],
 
     function (declare,
-              _Base,
-              Deferred,
-              hitch) {
+              _Base) {
 
         return declare([_Base], {
 
@@ -14,9 +10,15 @@ define(['altair/facades/declare',
             extend: function (Module) {
 
                 Module.extendOnce({
+                    viewPath: 'views',
                     render: function (path, context, options) {
 
+                        if(!path) {
+                            throw new Error('you need to pass a path to render()');
+                        }
+
                         var _p = this.resolvePath(path);
+
                         return this.nexus('liquidfire:Onyx').render(_p, context, options);
 
                     }
