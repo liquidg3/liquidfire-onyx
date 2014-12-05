@@ -15,6 +15,7 @@ define(['altair/facades/declare',
             extend: function (Module) {
 
                 Module.extendOnce({
+                    layout:  'views/layout.ejs',
                     context: function (options, config) {
                         return this.getValues(options || {}, config || {'methods': ['toViewValue', 'toJsValue']});
                     }
@@ -29,9 +30,6 @@ define(['altair/facades/declare',
 
                             var dfd, _context;
 
-                            if(!path) {
-                                path = 'views/layout.ejs';
-                            }
 
                             //is there a context()
                             if(this.context) {
@@ -47,6 +45,10 @@ define(['altair/facades/declare',
                             return when(dfd).then(this.hitch(function (viewValues) {
 
                                 _context =  mixin(context || {}, viewValues);
+
+                                if(!path) {
+                                    path = this.layout;
+                                }
 
                                 return this.nexus('liquidfire:Onyx').emit('will-render-widget', {
                                     context:    _context,
