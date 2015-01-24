@@ -15,12 +15,6 @@ define(['altair/facades/declare',
 
         startup: function () {
 
-            //must be added to consolidate (have a fork, just need to build, test, and make a pull request)
-            ejs.filters.split = function (word, delimeter) {
-                "use strict";
-                return word.split(delimeter);
-            };
-
             return this.inherited(arguments);
 
         },

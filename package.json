@@ -1,6 +1,6 @@
 {
     "name":         "liquidfire:Onyx",
-    "version":      "0.1.7",
+    "version":      "2.2.3",
     "description":  "A simple module that provides view rendering strategies (such as visionmedia/consolidate). It's entirely promise based!",
     "dependencies": {
         "consolidate": ">=0.10.x",
