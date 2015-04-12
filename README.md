@@ -6,8 +6,11 @@ on the file extension.
 ## Extensions
 
 - **render(path, context, options)**: render any view script with the passed context. You can also pass additional options.
+- **widget(path, options)**: instantiate a widget
 
 ## Examples
+
+### Rendering a view
 ``` js
 define(['altair/facades/declare',
         'altair/Lifecycle'
@@ -33,3 +36,4 @@ define(['altair/facades/declare',
 });
 ```
 
+### Using a widget

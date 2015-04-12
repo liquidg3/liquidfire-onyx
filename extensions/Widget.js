@@ -31,7 +31,19 @@ define(['altair/facades/declare',
 
                         //default place to look for templates
                         if (!_options.viewPaths) {
-                            _options.viewPaths = [this.resolvePath(this.viewPath || 'views')];
+
+                            //look relative to ourselves and relative to the altair runtime
+                            var p1 = this.resolvePath(this.viewPath || ''),
+                                p2 = this.nexus('Altair').resolvePath('');
+
+                            _options.viewPaths = [p1];
+
+                            //if we are calling this.widget() from a controller inside a web app, these should match
+                            //if we are calling it from inside a module or something else, these will probably no match.
+                            //i want to always make sure that ./views/
+                            if (p1 !== p2) {
+                                _options.viewPaths.push(p2);
+                            }
                         }
 
                         //if it's a nexus name, pass it off
