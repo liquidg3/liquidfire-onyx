@@ -1,0 +1,11 @@
+{
+    "properties": {
+        "cache": {
+            "type": "boolean",
+            "options": {
+                "label": "Enable Caching",
+                "default": false
+            }
+        }
+    }
+}

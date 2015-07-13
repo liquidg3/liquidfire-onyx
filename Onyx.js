@@ -18,7 +18,8 @@ define(['altair/facades/declare',
         './nexusresolvers/Widgets',
         './mixins/_HasRenderStrategiesMixin',
         'altair/plugins/node!fs',
-        'altair/plugins/node!path'
+        'altair/plugins/node!path',
+        'apollo/_HasSchemaMixin'
 ], function (declare,
              _,
              RenderExtension,
@@ -28,10 +29,11 @@ define(['altair/facades/declare',
              WidgetsResolver,
              _HasRenderStrategiesMixin,
              fs,
-             path) {
+             path,
+             _HasSchemaMixin) {
 
 
-    return declare([_HasRenderStrategiesMixin], {
+    return declare([_HasRenderStrategiesMixin, _HasSchemaMixin], {
 
         _strategies: null,
 
@@ -99,13 +101,18 @@ define(['altair/facades/declare',
         render: function (path, context, options) {
 
             var d,
-                extension = path.split('.').pop();
+                extension = path.split('.').pop(),
+                _options = options || {};
+
+            if (!_.has(_options, 'cache')) {
+                _options.cache = this.get('cache');
+            }
 
             _.each(this._strategies, function (strategy) {
 
                 if(strategy.canRender(extension)) {
 
-                    d = strategy.render(path, context, options);
+                    d = strategy.render(path, context, _options);
 
                     //stop iterating
                     return false;

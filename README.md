@@ -36,4 +36,24 @@ define(['altair/facades/declare',
 });
 ```
 
-### Using a widget
+## Using a widget
+
+Widgets are reusable visual components. They are like mini-reusable modules. Combined with [schemas](https://github.com/liquidg3/altair/blob/master/docs/schemas.md) you
+can make widgets totally customizable.
+
+## Caching
+
+View caching is off by default. This allows you to make live edits to views without having to reboot Alfred. To turn on caching (for production env), add this to your `modules.json`.
+
+```json
+{
+
+    "liquidfire:Onyx": {
+        "cache": true
+    }
+}
+
+
+```
+
+
