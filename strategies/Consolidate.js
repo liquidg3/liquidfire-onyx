@@ -1,15 +1,13 @@
 define(['altair/facades/declare',
         './_Base',
         'lodash',
-        'altair/Lifecycle',
-        'altair/plugins/node!consolidate',
-        'altair/plugins/node!ejs'
+        'altair/Lifecycle'
 ], function (declare,
              _Base,
              _,
-             Lifecycle,
-             consolidate,
-             ejs) {
+             Lifecycle) {
+
+    var consolidate, ejs;
 
     return declare([_Base, Lifecycle], {
 
@@ -24,6 +22,17 @@ define(['altair/facades/declare',
         },
 
         render: function (path, context, options) {
+
+            if (!consolidate) {
+
+                require(['altair/plugins/node!consolidate',
+                    'altair/plugins/node!ejs'], function (c, e) {
+
+                    consolidate = c;
+                    ejs = e;
+
+                });
+            }
 
             var dfd         = new this.Deferred(),
                 _options    = options || {},
