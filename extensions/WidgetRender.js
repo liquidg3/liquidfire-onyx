@@ -30,7 +30,6 @@ define(['altair/facades/declare',
 
                             var dfd, _context;
 
-
                             //is there a context()
                             if(this.context) {
 
