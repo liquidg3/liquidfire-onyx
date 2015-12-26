@@ -9,6 +9,21 @@ define(['altair/facades/declare',
 
     var consolidate, ejs;
 
+    function boot() {
+
+        if (!consolidate) {
+
+            require(['altair/plugins/node!consolidate',
+                'altair/plugins/node!ejs'], function (c, e) {
+
+                consolidate = c;
+                ejs = e;
+
+            });
+        }
+
+    }
+
     return declare([_Base, Lifecycle], {
 
         startup: function () {
@@ -18,21 +33,13 @@ define(['altair/facades/declare',
         },
 
         canRender: function (ext) {
+            boot();
             return _.has(consolidate, ext);
         },
 
         render: function (path, context, options) {
 
-            if (!consolidate) {
-
-                require(['altair/plugins/node!consolidate',
-                    'altair/plugins/node!ejs'], function (c, e) {
-
-                    consolidate = c;
-                    ejs = e;
-
-                });
-            }
+            boot();
 
             var dfd         = new this.Deferred(),
                 _options    = options || {},

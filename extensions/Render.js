@@ -10,7 +10,7 @@ define(['altair/facades/declare',
             extend: function (Module) {
 
                 Module.extendOnce({
-                    viewPath: '',
+                    viewPath: './views',
                     render: function (path, context, options) {
 
                         if(!path) {

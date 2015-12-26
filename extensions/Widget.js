@@ -34,7 +34,7 @@ define(['altair/facades/declare',
 
                             //look relative to ourselves and relative to the altair runtime
                             var p1 = this.resolvePath(this.viewPath || ''),
-                                p2 = this.nexus('Altair').resolvePath('');
+                                p2 = this.nexus('Altair').resolvePath('views');
 
                             _options.viewPaths = [p1];
 
