@@ -3,8 +3,8 @@
     "version":      "0.3.0",
     "description":  "A simple module that provides view rendering strategies (such as visionmedia/consolidate). It's entirely promise based!",
     "dependencies": {
-        "consolidate": ">=0.10.x",
-        "ejs":         ">=2.2.x"
+        "consolidate": "~0.13.1",
+        "ejs":         "~2.3.4"
     },
     "events":       {
         "will-render-widget": "A widget is about to be rendered!",
